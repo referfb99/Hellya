@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Niotron OneSignal Push Test</title>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "ff4cc6a3-d18b-4a70-9921-f4fcccf16981",
+        notifyButton: {
+          enable: true
+        },
+        allowLocalhostAsSecureOrigin: true
+      });
+
+      // Automatically prompt for permission
+      OneSignal.showSlidedownPrompt();
+    });
+
+    // Function to send a push notification using OneSignal REST API
+    function sendPushNotification() {
+      fetch("https://onesignal.com/api/v1/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "os_v2_app_75gmni6rrnfhbgjb6t6mz4ljqgtkwj27otruo5mbyc3vo6ejfize2loiosbpwkig4cd6urr3uypk3s6uvhawo3vrysuodkufvyhbpvy"  // Replace with your REST API key
+        },
+        body: JSON.stringify({
+          app_id: "ff4cc6a3-d18b-4a70-9921-f4fcccf16981",
+          included_segments: ["Subscribed Users"],
+          headings: { "en": "Test Notification" },
+          contents: { "en": "This is a test notification from WebViewer!" }
+        })
+      })
+      .then(response => response.json())
+      .then(data => alert("Notification sent: " + JSON.stringify(data)))
+      .catch(error => alert("Error sending notification: " + error));
+    }
+  </script>
+</head>
+<body>
+  <h2>Niotron Push Notification Test</h2>
+  <button onclick="sendPushNotification()">Send Push Notification</button>
+</body>
+</html>
